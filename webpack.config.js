@@ -1,52 +1,41 @@
-var path = require('path')
-var webpack = require('webpack')
-var NpmInstallPlugin = require('npm-install-webpack-plugin')
-var autoprefixer = require('autoprefixer');
-var precss = require('precss');
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
-  entry: [
-    'webpack-hot-middleware/client',
-    'babel-polyfill',
-    './src/index'
-  ],
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/static/'
-  },
-  plugins: [
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new NpmInstallPlugin()
-  ],
-  module: {
-    preLoaders: [
-      {
-        test: /\.js$/,
-        loaders: ['eslint'],
-        include: [
-          path.resolve(__dirname, "src"),
-        ],
-      }
+    devtool: 'source-map',
+    entry: [
+        './client/app.js'
     ],
-    loaders: [
-      {
-        loaders: ['react-hot', 'babel-loader'],
-        include: [
-          path.resolve(__dirname, "src"),
-        ],
-        test: /\.js$/,
-        plugins: ['transform-runtime'],
-      },
-      {
-        test:   /\.css$/,
-        loader: "style-loader!css-loader!postcss-loader"
-      }
+    output: {
+        path: path.join(__dirname, 'build'),
+        filename: 'bundle.js',
+        publicPath: '/static/'
+    },
+    devServer: {
+        proxy: [],
+        historyApiFallback: true
+    },
+    module: {
+        loaders: [
+            {
+                test: /\.js?/,
+                loaders: ['babel'],
+                include: path.join(__dirname, 'client')
+            },
+            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' },
+            { test: /\.css$/, loader: 'style!css' },
+            {
+                test: /^((?!\.module).)*(sass|scss)$/,
+                loader: 'style!css!sass!sass-resources'
+            },
+            {
+                test: /\.module.(sass|scss)$/,
+                loader: 'style-loader!css-loader?modules&importLoaders=2&sourceMap&localIdentName=[local]___[hash:base64:5]!sass-loader!sass-resources'
+            }
+        ]
+    },
+    sassResources: [
+        './client/assets/styles/variables.scss',
+        './client/assets/styles/mixins.scss'
     ]
-  },
-  postcss: function () {
-    return [autoprefixer, precss];
-  }
 }
