@@ -1,3 +1,6 @@
+##CREATE EMAIL PAGE
+EXAMPLE ![Screenshot](https://cloud.githubusercontent.com/assets/4060187/13156316/e2bcd9f6-d64f-11e5-9686-852ad92f148d.gif)
+
 # mail-formatter
 
 ## preparation
